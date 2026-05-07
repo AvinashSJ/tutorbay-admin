@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import { inviteUser, updateUserRole, deleteUser, toggleBanUser } from "./actions";
+import React, { useState, useRef, useEffect } from "react";
+import { inviteUser, updateUserRole, deleteUser, toggleBanUser, reviewTutorApplication } from "./actions";
 
 // ---------------------------------------------------------------------------
 // Invite User Modal
@@ -206,6 +206,183 @@ export function DeleteUserModal() {
               </button>
               <button type="submit" className="btn btn-danger btn-sm">
                 Delete
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tutor Action Buttons — Approve/Reject for pending tutor applications
+// ---------------------------------------------------------------------------
+interface TutorActionButtonsProps {
+  userId: string;
+  email: string;
+  status: string;
+}
+
+export function TutorActionButtons({ userId, email, status }: TutorActionButtonsProps) {
+  return (
+    <>
+      <button
+        type="button"
+        title="Approve application"
+        className="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle border-0"
+        data-bs-toggle="modal"
+        data-bs-target="#tutorReviewModal"
+        data-user-id={userId}
+        data-email={email}
+        data-action="APPROVE"
+      >
+        <i className="ri-check-line text-xl" />
+      </button>
+
+      <button
+        type="button"
+        title="Request additional info"
+        className="bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle border-0"
+        data-bs-toggle="modal"
+        data-bs-target="#tutorReviewModal"
+        data-user-id={userId}
+        data-email={email}
+        data-action="REQUEST_INFO"
+      >
+        <i className="ri-information-line text-xl" />
+      </button>
+
+      <button
+        type="button"
+        title="Reject application"
+        className="bg-danger-focus text-danger-600 bg-hover-danger-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle border-0"
+        data-bs-toggle="modal"
+        data-bs-target="#tutorReviewModal"
+        data-user-id={userId}
+        data-email={email}
+        data-action="REJECT"
+      >
+        <i className="ri-close-line text-xl" />
+      </button>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tutor Review Modal — Approve/Reject/Request Info
+// ---------------------------------------------------------------------------
+export function TutorReviewModal() {
+  const [action, setAction] = useState("");
+  const [email, setEmail] = useState("");
+  const userIdRef = useRef<HTMLInputElement>(null);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
+  const additionalInfoRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const modal = (e as CustomEvent).target as HTMLElement;
+      if (modal?.id !== "tutorReviewModal") return;
+      const btn = (e as CustomEvent & { relatedTarget?: HTMLElement }).relatedTarget;
+      if (!btn) return;
+      if (userIdRef.current) userIdRef.current.value = btn.dataset.userId ?? "";
+      setAction(btn.dataset.action ?? "");
+      setEmail(btn.dataset.email ?? "");
+      if (notesRef.current) notesRef.current.value = "";
+      if (additionalInfoRef.current) additionalInfoRef.current.value = "";
+    };
+    document.addEventListener("show.bs.modal", handler);
+    return () => document.removeEventListener("show.bs.modal", handler);
+  }, []);
+
+  const getActionLabel = () => {
+    if (action === "APPROVE") return "Approve";
+    if (action === "REJECT") return "Reject";
+    if (action === "REQUEST_INFO") return "Request Additional Information";
+    return "Review";
+  };
+
+  const getActionColor = () => {
+    if (action === "APPROVE") return "success";
+    if (action === "REJECT") return "danger";
+    if (action === "REQUEST_INFO") return "info";
+    return "primary";
+  };
+
+  return (
+    <div
+      className="modal fade"
+      id="tutorReviewModal"
+      tabIndex={-1}
+      aria-labelledby="tutorReviewModalLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content radius-16 overflow-hidden">
+          <div className="modal-header">
+            <h5 className="modal-title" id="tutorReviewModalLabel">
+              {getActionLabel()} Application
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            />
+          </div>
+          <form action={reviewTutorApplication}>
+            <div className="modal-body">
+              <p className="text-secondary-light text-sm mb-3">{email}</p>
+              <input type="hidden" name="userId" ref={userIdRef} />
+              <input type="hidden" name="action" value={action} />
+
+              {action !== "APPROVE" && (
+                <div className="mb-3">
+                  <label className="form-label fw-medium">
+                    {action === "REJECT" ? "Rejection Reason" : "Additional Information Required"}
+                  </label>
+                  <textarea
+                    name="adminNotes"
+                    className="form-control"
+                    rows={3}
+                    placeholder={
+                      action === "REJECT"
+                        ? "Please provide reason for rejection..."
+                        : "Specify what additional information is needed..."
+                    }
+                    ref={notesRef}
+                  />
+                </div>
+              )}
+
+              {action === "REQUEST_INFO" && (
+                <div className="mb-3">
+                  <label className="form-label fw-medium">
+                    Information Required
+                  </label>
+                  <textarea
+                    name="additionalInfo"
+                    className="form-control"
+                    rows={3}
+                    placeholder="Specify what additional information is needed..."
+                    ref={additionalInfoRef}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className={`btn btn-${getActionColor()}`}
+              >
+                Confirm {getActionLabel()}
               </button>
             </div>
           </form>

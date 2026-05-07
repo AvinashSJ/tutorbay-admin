@@ -1,7 +1,7 @@
 import React from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import UserTable from "./UserTable";
-import { InviteUserModal, EditRoleModal, DeleteUserModal } from "./modals";
+import { InviteUserModal, EditRoleModal, DeleteUserModal, TutorReviewModal } from "./modals";
 
 type PageProps = {
   searchParams: Promise<{ error?: string; message?: string }>;
@@ -22,14 +22,28 @@ export default async function UsersPage({ searchParams }: PageProps) {
   const supabase = createAdminClient();
   const { data, error } = await supabase.auth.admin.listUsers({ perPage: 1000 });
 
-  const users = (data?.users ?? []).map((u) => ({
-    id: u.id,
-    email: u.email ?? "(no email)",
-    role: (u.user_metadata?.role as string) || "student",
-    createdAt: formatDate(u.created_at),
-    lastSignIn: formatDate(u.last_sign_in_at),
-    isBanned: !!u.banned_until && new Date(u.banned_until) > new Date(),
-  }));
+  // Fetch tutor profiles to get application status
+  const { data: tutorProfiles } = await supabase
+    .from("TutorProfile")
+    .select("userId, applicationStatus, adminNotes");
+
+  const tutorProfileMap = new Map(
+    (tutorProfiles ?? []).map((p) => [p.userId, p])
+  );
+
+  const users = (data?.users ?? []).map((u) => {
+    const tutorProfile = tutorProfileMap.get(u.id);
+    return {
+      id: u.id,
+      email: u.email ?? "(no email)",
+      role: (u.user_metadata?.role as string) || "student",
+      createdAt: formatDate(u.created_at),
+      lastSignIn: formatDate(u.last_sign_in_at),
+      isBanned: !!u.banned_until && new Date(u.banned_until) > new Date(),
+      tutorApplicationStatus: tutorProfile?.applicationStatus ?? null,
+      tutorAdminNotes: tutorProfile?.adminNotes ?? null,
+    };
+  });
 
   return (
     <>
@@ -71,6 +85,7 @@ export default async function UsersPage({ searchParams }: PageProps) {
       <InviteUserModal />
       <EditRoleModal />
       <DeleteUserModal />
+      <TutorReviewModal />
     </>
   );
 }

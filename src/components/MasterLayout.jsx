@@ -126,137 +126,17 @@ const MasterLayout = ({ children }) => {
         </div>
         <div className='sidebar-menu-area'>
           <ul className='sidebar-menu' id='sidebar-menu'>
-            <li className='dropdown'>
-              <Link to='#'>
+            <li>
+              <NavLink
+                to='/dashboard'
+                className={(navData) => (navData.isActive ? "active-page" : "")}
+              >
                 <Icon
                   icon='solar:home-smile-angle-outline'
                   className='menu-icon'
                 />
                 <span>Dashboard</span>
-              </Link>
-              <ul className='sidebar-submenu'>
-                <li>
-                  <NavLink
-                    to='/'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-primary-600 w-auto' />
-                    AI
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/dashboard'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-warning-main w-auto' />{" "}
-                    CRM
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-3'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    eCommerce
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-4'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-danger-main w-auto' />
-                    Cryptocurrency
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-5'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-success-main w-auto' />{" "}
-                    Investment
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-6'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-purple w-auto' />{" "}
-                    LMS
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-7'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    NFT &amp; Gaming
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-8'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    Medical
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-9'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    Analytics
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-10'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    POS & Inventory
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/index-11'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    Finance & Banking
-                  </NavLink>
-                </li>
-              </ul>
+              </NavLink>
             </li>
 
             <li className='sidebar-menu-group-title'>Application</li>
@@ -859,62 +739,73 @@ const MasterLayout = ({ children }) => {
               </NavLink>
             </li>
 
-            {/* Users Dropdown */}
-            <li className='dropdown'>
-              <Link to='#'>
-                <Icon
-                  icon='flowbite:users-group-outline'
-                  className='menu-icon'
-                />
-                <span>Users</span>
-              </Link>
-              <ul className='sidebar-submenu'>
-                <li>
-                  <NavLink
-                    to='/users-list'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-primary-600 w-auto' />{" "}
-                    Users List
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/users-grid'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-warning-main w-auto' />{" "}
-                    Users Grid
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/add-user'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
-                    Add User
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to='/view-profile'
-                    className={(navData) =>
-                      navData.isActive ? "active-page" : ""
-                    }
-                  >
-                    <i className='ri-circle-fill circle-icon text-danger-main w-auto' />{" "}
-                    View Profile
-                  </NavLink>
-                </li>
-              </ul>
-            </li>
+             {/* Users Dropdown */}
+             <li className='dropdown'>
+               <Link to='#'>
+                 <Icon
+                   icon='flowbite:users-group-outline'
+                   className='menu-icon'
+                 />
+                 <span>Users</span>
+               </Link>
+               <ul className='sidebar-submenu'>
+                 <li>
+                   <NavLink
+                     to='/users'
+                     className={(navData) =>
+                       navData.isActive ? "active-page" : ""
+                     }
+                   >
+                     <i className='ri-circle-fill circle-icon text-primary-600 w-auto' />{" "}
+                     Users
+                   </NavLink>
+                 </li>
+                 <li>
+                   <NavLink
+                     to='/users-list'
+                     className={(navData) =>
+                       navData.isActive ? "active-page" : ""
+                     }
+                   >
+                     <i className='ri-circle-fill circle-icon text-primary-600 w-auto' />{" "}
+                     Users List
+                   </NavLink>
+                 </li>
+                 <li>
+                   <NavLink
+                     to='/users-grid'
+                     className={(navData) =>
+                       navData.isActive ? "active-page" : ""
+                     }
+                   >
+                     <i className='ri-circle-fill circle-icon text-warning-main w-auto' />{" "}
+                     Users Grid
+                   </NavLink>
+                 </li>
+                 <li>
+                   <NavLink
+                     to='/add-user'
+                     className={(navData) =>
+                       navData.isActive ? "active-page" : ""
+                     }
+                   >
+                     <i className='ri-circle-fill circle-icon text-info-main w-auto' />{" "}
+                     Add User
+                   </NavLink>
+                 </li>
+                 <li>
+                   <NavLink
+                     to='/view-profile'
+                     className={(navData) =>
+                       navData.isActive ? "active-page" : ""
+                     }
+                   >
+                     <i className='ri-circle-fill circle-icon text-danger-main w-auto' />{" "}
+                     View Profile
+                   </NavLink>
+                 </li>
+               </ul>
+             </li>
 
             {/* Role & Access Dropdown */}
             <li className='dropdown'>

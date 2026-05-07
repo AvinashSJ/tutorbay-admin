@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { BanButton } from "./modals";
+import { reviewTutorApplication } from "./actions";
 
 const PAGE_SIZE = 20;
 
@@ -12,6 +13,8 @@ interface UserRow {
   createdAt: string;
   lastSignIn: string;
   isBanned: boolean;
+  tutorApplicationStatus: string | null;
+  tutorAdminNotes: string | null;
 }
 
 interface UserTableProps {
@@ -20,6 +23,34 @@ interface UserTableProps {
 
 function getInitials(email: string): string {
   return email.slice(0, 2).toUpperCase();
+}
+
+const STATUS_BADGE_COLORS = {
+  DRAFT: 'secondary',
+  PENDING_REVIEW: 'warning',
+  ADDITIONAL_INFO_REQUIRED: 'info',
+  APPROVED: 'success',
+  REJECTED: 'danger',
+} as const;
+
+function getStatusBadgeColor(status: string | null): string {
+  if (!status) return 'secondary';
+  return STATUS_BADGE_COLORS[status as keyof typeof STATUS_BADGE_COLORS] || 'secondary';
+}
+
+function formatStatus(status: string | null): string {
+  if (!status) return '—';
+  return status.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+}
+
+/** Deterministic pastel-ish colour from an email string */
+function stringToColor(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const h = Math.abs(hash) % 360;
+  return `hsl(${h}, 55%, 45%)`;
 }
 
 export default function UserTable({ users }: UserTableProps) {
@@ -84,19 +115,20 @@ export default function UserTable({ users }: UserTableProps) {
                 <th scope="col">Last Sign In</th>
                 <th scope="col" className="text-center">Status</th>
                 <th scope="col" className="text-center">Actions</th>
+                <th scope="col">Tutor Application</th>
               </tr>
             </thead>
             <tbody>
               {paged.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center py-40 text-secondary-light">
+                  <td colSpan={7} className="text-center py-40 text-secondary-light">
                     No users found.
                   </td>
                 </tr>
               ) : (
                 paged.map((user) => (
                   <tr key={user.id}>
-                    {/* Avatar + Email */}
+                    {/* User */}
                     <td>
                       <div className="d-flex align-items-center gap-10">
                         <div
@@ -124,7 +156,7 @@ export default function UserTable({ users }: UserTableProps) {
                       <span className="text-md text-secondary-light">{user.lastSignIn}</span>
                     </td>
 
-                    {/* Status */}
+                    {/* Status (Active/Banned) */}
                     <td className="text-center">
                       {user.isBanned ? (
                         <span className="bg-danger-focus text-danger-600 border border-danger-main px-16 py-4 radius-4 fw-medium text-sm">
@@ -170,6 +202,47 @@ export default function UserTable({ users }: UserTableProps) {
                           <i className="ri-delete-bin-line text-xl" />
                         </button>
                       </div>
+                    </td>
+
+                    {/* Tutor Application */}
+                    <td>
+                      {user.role.toUpperCase() === 'TUTOR' ? (
+                        <div style={{ minWidth: '200px' }} className="p-1 border rounded">
+                          <form action={reviewTutorApplication} className="d-flex flex-column gap-2">
+                            <input type="hidden" name="userId" value={user.id} />
+                            <div className="d-flex gap-2 align-items-center mb-1">
+                              <select
+                                name="action"
+                                defaultValue={user.tutorApplicationStatus || "PENDING_REVIEW"}
+                                className="form-select form-select-sm flex-grow-1"
+                                style={{ minWidth: '120px' }}
+                              >
+                                <option value="PENDING_REVIEW">Pending Review</option>
+                                <option value="APPROVED">Approve</option>
+                                <option value="ADDITIONAL_INFO_REQUIRED">Resubmit</option>
+                                <option value="REJECTED">Reject</option>
+                              </select>
+                              <button
+                                type="submit"
+                                className="btn btn-sm btn-primary px-2"
+                                title="Save"
+                              >
+                                Save
+                              </button>
+                            </div>
+                            {user.tutorApplicationStatus && (
+                              <small className={`text-${getStatusBadgeColor(user.tutorApplicationStatus)}`}>
+                                Current: {formatStatus(user.tutorApplicationStatus)}
+                              </small>
+                            )}
+                            {!user.tutorApplicationStatus && (
+                              <small className="text-warning">No application yet</small>
+                            )}
+                          </form>
+                        </div>
+                      ) : (
+                        <span className="text-secondary-light text-sm">—</span>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -217,14 +290,4 @@ export default function UserTable({ users }: UserTableProps) {
       </div>
     </div>
   );
-}
-
-/** Deterministic pastel-ish colour from an email string */
-function stringToColor(str: string): string {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const h = Math.abs(hash) % 360;
-  return `hsl(${h}, 55%, 45%)`;
 }
