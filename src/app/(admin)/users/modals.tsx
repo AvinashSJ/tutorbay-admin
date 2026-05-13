@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { inviteUser, updateUserRole, deleteUser, toggleBanUser, reviewTutorApplication } from "./actions";
+import { inviteUser, updateUserRole, deleteUser, toggleBanUser } from "./actions";
 
 // ---------------------------------------------------------------------------
 // Invite User Modal
@@ -309,6 +309,13 @@ export function TutorReviewModal() {
     return "primary";
   };
 
+  const getServerAction = () => {
+    if (action === "APPROVE") return "APPROVED";
+    if (action === "REJECT") return "REJECTED";
+    if (action === "REQUEST_INFO") return "ADDITIONAL_INFO_REQUIRED";
+    return action;
+  };
+
   return (
     <div
       className="modal fade"
@@ -330,11 +337,11 @@ export function TutorReviewModal() {
               aria-label="Close"
             />
           </div>
-          <form action={reviewTutorApplication}>
+          <form method="POST" action="/api/admin/tutor-review">
             <div className="modal-body">
               <p className="text-secondary-light text-sm mb-3">{email}</p>
               <input type="hidden" name="userId" ref={userIdRef} />
-              <input type="hidden" name="action" value={action} />
+              <input type="hidden" name="action" value={getServerAction()} />
 
               {action !== "APPROVE" && (
                 <div className="mb-3">

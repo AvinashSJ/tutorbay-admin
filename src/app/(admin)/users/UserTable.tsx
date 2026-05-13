@@ -25,24 +25,6 @@ function getInitials(email: string): string {
   return email.slice(0, 2).toUpperCase();
 }
 
-const STATUS_BADGE_COLORS = {
-  DRAFT: 'secondary',
-  PENDING_REVIEW: 'warning',
-  ADDITIONAL_INFO_REQUIRED: 'info',
-  APPROVED: 'success',
-  REJECTED: 'danger',
-} as const;
-
-function getStatusBadgeColor(status: string | null): string {
-  if (!status) return 'secondary';
-  return STATUS_BADGE_COLORS[status as keyof typeof STATUS_BADGE_COLORS] || 'secondary';
-}
-
-function formatStatus(status: string | null): string {
-  if (!status) return '—';
-  return status.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-}
-
 /** Deterministic pastel-ish colour from an email string */
 function stringToColor(str: string): string {
   let hash = 0;
@@ -56,6 +38,7 @@ function stringToColor(str: string): string {
 export default function UserTable({ users }: UserTableProps) {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [showNotes, setShowNotes] = useState<Record<string, boolean>>({});
 
   const filtered = useMemo(
     () =>
@@ -116,12 +99,13 @@ export default function UserTable({ users }: UserTableProps) {
                 <th scope="col" className="text-center">Status</th>
                 <th scope="col" className="text-center">Actions</th>
                 <th scope="col">Tutor Application</th>
+                <th scope="col">Admin Notes</th>
               </tr>
             </thead>
             <tbody>
               {paged.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-40 text-secondary-light">
+                  <td colSpan={8} className="text-center py-40 text-secondary-light">
                     No users found.
                   </td>
                 </tr>
@@ -205,46 +189,68 @@ export default function UserTable({ users }: UserTableProps) {
                     </td>
 
                     {/* Tutor Application */}
-                    <td>
-                      {user.role.toUpperCase() === 'TUTOR' ? (
-                        <div style={{ minWidth: '200px' }} className="p-1 border rounded">
-                          <form action={reviewTutorApplication} className="d-flex flex-column gap-2">
+                      <td>
+                        {user.role.toUpperCase() === 'TUTOR' ? (
+                          <form
+                            action={reviewTutorApplication}
+                            className="d-flex flex-column gap-2 p-1 border rounded"
+                            style={{ minWidth: '200px' }}
+                          >
                             <input type="hidden" name="userId" value={user.id} />
-                            <div className="d-flex gap-2 align-items-center mb-1">
+                            <div className="d-flex gap-2 align-items-center">
                               <select
                                 name="action"
                                 defaultValue={user.tutorApplicationStatus || "PENDING_REVIEW"}
                                 className="form-select form-select-sm flex-grow-1"
                                 style={{ minWidth: '120px' }}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (val === 'REJECTED' || val === 'ADDITIONAL_INFO_REQUIRED') {
+                                    setShowNotes((prev) => ({ ...prev, [user.id]: true }));
+                                  } else {
+                                    setShowNotes((prev) => ({ ...prev, [user.id]: false }));
+                                    e.target.form?.requestSubmit();
+                                  }
+                                }}
                               >
                                 <option value="PENDING_REVIEW">Pending Review</option>
                                 <option value="APPROVED">Approve</option>
                                 <option value="ADDITIONAL_INFO_REQUIRED">Resubmit</option>
                                 <option value="REJECTED">Reject</option>
                               </select>
-                              <button
-                                type="submit"
-                                className="btn btn-sm btn-primary px-2"
-                                title="Save"
-                              >
-                                Save
-                              </button>
+                              {showNotes[user.id] && (
+                                <button
+                                  type="submit"
+                                  className="btn btn-sm btn-primary px-2"
+                                >
+                                  Save
+                                </button>
+                              )}
                             </div>
-                            {user.tutorApplicationStatus && (
-                              <small className={`text-${getStatusBadgeColor(user.tutorApplicationStatus)}`}>
-                                Current: {formatStatus(user.tutorApplicationStatus)}
-                              </small>
-                            )}
-                            {!user.tutorApplicationStatus && (
-                              <small className="text-warning">No application yet</small>
+                            {showNotes[user.id] && (
+                              <textarea
+                                name="adminNotes"
+                                className="form-control form-control-sm"
+                                rows={2}
+                                placeholder="Admin notes (required for Reject/Resubmit)..."
+                              />
                             )}
                           </form>
-                        </div>
-                      ) : (
-                        <span className="text-secondary-light text-sm">—</span>
-                      )}
-                    </td>
-                  </tr>
+                        ) : (
+                          <span className="text-secondary-light text-sm">—</span>
+                        )}
+                      </td>
+                      {/* Admin Notes */}
+                      <td style={{ maxWidth: '200px' }}>
+                        {user.role.toUpperCase() === 'TUTOR' ? (
+                          <span className="text-sm" style={{ wordBreak: 'break-word' }}>
+                            {user.tutorAdminNotes || '—'}
+                          </span>
+                        ) : (
+                          <span className="text-secondary-light text-sm">—</span>
+                        )}
+                      </td>
+                    </tr>
                 ))
               )}
             </tbody>

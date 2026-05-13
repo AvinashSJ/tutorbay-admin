@@ -8,6 +8,7 @@ const MasterLayout = ({ children }) => {
   let [sidebarActive, seSidebarActive] = useState(false);
   let [mobileMenu, setMobileMenu] = useState(false);
   const location = useLocation(); // Hook to get the current route
+  const SHOW_TEMPLATE_MENUS = false; // toggle to true to preview all template menus
 
   useEffect(() => {
     const handleDropdownClick = (event) => {
@@ -140,6 +141,8 @@ const MasterLayout = ({ children }) => {
             </li>
 
             <li className='sidebar-menu-group-title'>Application</li>
+
+            {SHOW_TEMPLATE_MENUS && (<>
             <li>
               <NavLink
                 to='/email'
@@ -353,9 +356,9 @@ const MasterLayout = ({ children }) => {
                 </li>
               </ul>
             </li>
+            </>)}
 
-            <li className='sidebar-menu-group-title'>UI Elements</li>
-
+            {SHOW_TEMPLATE_MENUS && (<>
             {/* Components Dropdown */}
             <li className='dropdown'>
               <Link to='#'>
@@ -738,8 +741,7 @@ const MasterLayout = ({ children }) => {
                 <span>Widgets</span>
               </NavLink>
             </li>
-
-             {/* Users Dropdown */}
+            </>)}
              <li className='dropdown'>
                <Link to='#'>
                  <Icon
@@ -805,7 +807,79 @@ const MasterLayout = ({ children }) => {
                    </NavLink>
                  </li>
                </ul>
-             </li>
+</li>
+
+            {/* Requirements Dropdown */}
+            <li className='dropdown'>
+              <Link to='#'>
+                <Icon
+                  icon='ri:file-list-3-line'
+                  className='menu-icon'
+                />
+                <span>Requirements</span>
+              </Link>
+              <ul className='sidebar-submenu'>
+                <li>
+                  <NavLink
+                    to='/requirements'
+                    className={(navData) =>
+                      navData.isActive ? "active-page" : ""
+                    }
+                  >
+                    <i className='ri-circle-fill circle-icon text-primary-600 w-auto' />
+                    Requirements
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
+
+            {/* Matches */}
+            <li>
+              <NavLink
+                to='/matches'
+                className={(navData) =>
+                  navData.isActive ? "active-page" : ""
+                }
+              >
+                <Icon
+                  icon='mdi:account-switch'
+                  className='menu-icon'
+                />
+                <span>Matches</span>
+              </NavLink>
+            </li>
+
+            {/* Payments */}
+            <li>
+              <NavLink
+                to='/payments'
+                className={(navData) =>
+                  navData.isActive ? "active-page" : ""
+                }
+              >
+                <Icon
+                  icon='mdi:credit-card-outline'
+                  className='menu-icon'
+                />
+                <span>Payments</span>
+              </NavLink>
+            </li>
+
+            {/* Subscribers */}
+            <li>
+              <NavLink
+                to='/subscribers'
+                className={(navData) =>
+                  navData.isActive ? "active-page" : ""
+                }
+              >
+                <Icon
+                  icon='mdi:email-outline'
+                  className='menu-icon'
+                />
+                <span>Subscribers</span>
+              </NavLink>
+            </li>
 
             {/* Role & Access Dropdown */}
             <li className='dropdown'>
@@ -839,6 +913,7 @@ const MasterLayout = ({ children }) => {
               </ul>
             </li>
 
+            {SHOW_TEMPLATE_MENUS && (<>
             <li className='sidebar-menu-group-title'>Application</li>
 
             {/* Authentication Dropdown */}
@@ -1170,6 +1245,7 @@ const MasterLayout = ({ children }) => {
                 </li>
               </ul>
             </li>
+            </>)}
           </ul>
         </div>
       </aside>
@@ -1850,12 +1926,7 @@ const MasterLayout = ({ children }) => {
         <footer className='d-footer'>
           <div className='row align-items-center justify-content-between'>
             <div className='col-auto'>
-              <p className='mb-0'>Â© 2024 WowDash. All Rights Reserved.</p>
-            </div>
-            <div className='col-auto'>
-              <p className='mb-0'>
-                Made by <span className='text-primary-600'>wowtheme7</span>
-              </p>
+              <p className='mb-0'>&copy; 2026 Tutorbay</p>
             </div>
           </div>
         </footer>

@@ -99,6 +99,51 @@ export async function toggleBanUser(formData: FormData) {
  // ---------------------------------------------------------------------------
 // Tutor Application Review
 // ---------------------------------------------------------------------------
+// Tutor Registration Credit Issuance
+async function grantWelcomeCredits(userId: string, supabase: ReturnType<typeof createAdminClient>) {
+  const WELCOME_CREDITS = 15;
+
+  const { data: existingWallet } = await supabase
+    .from("TutorWallet")
+    .select("id, balance")
+    .eq("tutorId", userId)
+    .single();
+
+  if (existingWallet) {
+    const newBalance = existingWallet.balance + WELCOME_CREDITS;
+    await supabase
+      .from("TutorWallet")
+      .update({ balance: newBalance })
+      .eq("id", existingWallet.id);
+
+    await supabase.from("WalletTransaction").insert({
+      walletId: existingWallet.id,
+      type: "CREDIT",
+      source: "WELCOME_BONUS",
+      amount: WELCOME_CREDITS,
+      balanceAfter: newBalance,
+      description: "Welcome bonus credits on tutor approval",
+    });
+  } else {
+    const { data: newWallet, error: walletErr } = await supabase
+      .from("TutorWallet")
+      .insert({ tutorId: userId, balance: WELCOME_CREDITS })
+      .select("id")
+      .single();
+
+    if (!walletErr && newWallet) {
+      await supabase.from("WalletTransaction").insert({
+        walletId: newWallet.id,
+        type: "CREDIT",
+        source: "WELCOME_BONUS",
+        amount: WELCOME_CREDITS,
+        balanceAfter: WELCOME_CREDITS,
+        description: "Welcome bonus credits on tutor approval",
+      });
+    }
+  }
+}
+
 export async function reviewTutorApplication(formData: FormData) {
   const userId = String(formData.get("userId") ?? "").trim();
   const action = String(formData.get("action") ?? "").trim();
@@ -114,10 +159,10 @@ export async function reviewTutorApplication(formData: FormData) {
 
   let newStatus: string;
   switch (action) {
-    case "APPROVE":
+    case "APPROVED":
       newStatus = "APPROVED";
       break;
-    case "REJECT":
+    case "REJECTED":
       newStatus = "REJECTED";
       break;
     case "ADDITIONAL_INFO_REQUIRED":
@@ -152,7 +197,6 @@ export async function reviewTutorApplication(formData: FormData) {
       adminNotes: adminNotes,
       applicationHistory: [...(currentProfile?.applicationHistory || []), historyEntry],
       updatedAt: now,
-      isVerified: action === "APPROVE",
     })
     .eq("userId", userId);
 
@@ -160,6 +204,12 @@ export async function reviewTutorApplication(formData: FormData) {
     redirect(`${USERS_PATH}?error=${encodeURIComponent(sanitizeError(error.message))}`);
   }
 
+  // Grant welcome credits when tutor is approved
+  if (action === "APPROVED") {
+    await grantWelcomeCredits(userId, supabase);
+  }
+
   revalidatePath(USERS_PATH);
-  redirect(`${USERS_PATH}?message=${encodeURIComponent(`Application ${action.toLowerCase()}d successfully.`)}`);
+  const label = newStatus.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  redirect(`${USERS_PATH}?message=${encodeURIComponent(`Application status set to ${label}.`)}`);
 }
