@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 
-interface PaymentRow {
+export interface PaymentRow {
   id: string;
   tutorId: string;
   email: string | null;

@@ -1,6 +1,7 @@
 import React from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import PaymentTable from "./PaymentTable";
+import type { PaymentRow } from "./PaymentTable";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,7 @@ export default async function PaymentsPage() {
         </div>
       )}
 
-      <PaymentTable payments={payments as Record<string, unknown>[] ?? []} />
+      <PaymentTable payments={payments as PaymentRow[] ?? []} />
     </>
   );
 }

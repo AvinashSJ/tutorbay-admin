@@ -1,6 +1,7 @@
 import React from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import SubscriberTable from "./SubscriberTable";
+import type { SubscriberRow } from "./SubscriberTable";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,7 @@ export default async function SubscribersPage() {
         </div>
       )}
 
-      <SubscriberTable subscribers={(subscribers as Record<string, unknown>[]) ?? []} />
+      <SubscriberTable subscribers={subscribers as SubscriberRow[] ?? []} />
     </>
   );
 }

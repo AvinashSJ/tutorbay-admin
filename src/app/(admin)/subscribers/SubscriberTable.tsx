@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 
-interface SubscriberRow {
+export interface SubscriberRow {
   id: string;
   email: string;
   createdAt: string | null;
