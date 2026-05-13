@@ -13,20 +13,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <div className="container" style={{ maxWidth: 980 }}>
         <div className="row g-0 shadow rounded-4 overflow-hidden bg-white">
           <div className="col-lg-6 p-5">
-            <div className="mb-4">
-              <Image
-                src="/assets/images/logo.png"
-                alt="Tutorbay"
-                width={150}
-                height={42}
-                priority
-                style={{ width: "auto", height: "auto" }}
-              />
-            </div>
             <h1 className="h3 fw-bold mb-3">Tutorbay Admin</h1>
-            <p className="text-muted mb-4">
-              Sign in with Supabase authentication to access the admin backend.
-            </p>
 
             {params.message ? (
               <div className="alert alert-success py-2" role="alert">
@@ -70,23 +57,17 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
           <div
             className="col-lg-6 d-none d-lg-flex align-items-center justify-content-center"
-            style={{
-              backgroundImage:
-                "linear-gradient(140deg, rgba(49,93,224,0.98), rgba(41,171,226,0.9))",
-            }}
           >
-            <div className="text-center text-white p-5">
+            <div className="text-center p-5">
               <Image
-                src="/assets/images/auth/auth-img.png"
-                alt="Admin"
-                width={330}
-                height={260}
-                loading="eager"
+                src="/tutorbay_-removebg-preview.png"
+                alt="Tutorbay"
+                width={180}
+                height={50}
+                priority
                 style={{ width: "auto", height: "auto" }}
+                className="mb-4"
               />
-              <p className="mt-4 mb-0 fs-5">
-                Next.js App Router + Supabase SSR session management.
-              </p>
             </div>
           </div>
         </div>

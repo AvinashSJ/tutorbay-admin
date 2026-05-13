@@ -106,25 +106,6 @@ const MasterLayout = ({ children }) => {
         >
           <Icon icon='radix-icons:cross-2' />
         </button>
-        <div>
-          <Link to='/' className='sidebar-logo'>
-            <img
-              src='assets/images/logo.png'
-              alt='site logo'
-              className='light-logo'
-            />
-            <img
-              src='assets/images/logo-light.png'
-              alt='site logo'
-              className='dark-logo'
-            />
-            <img
-              src='assets/images/logo-icon.png'
-              alt='site logo'
-              className='logo-icon'
-            />
-          </Link>
-        </div>
         <div className='sidebar-menu-area'>
           <ul className='sidebar-menu' id='sidebar-menu'>
             <li>
@@ -1246,6 +1227,15 @@ const MasterLayout = ({ children }) => {
               </ul>
             </li>
             </>)}
+            <li>
+              <a
+                href="/api/auth/signout"
+                className="d-flex align-items-center gap-3 text-danger"
+              >
+                <Icon icon='lucide:power' className='menu-icon' />
+                <span>Log Out</span>
+              </a>
+            </li>
           </ul>
         </div>
       </aside>
@@ -1902,13 +1892,14 @@ const MasterLayout = ({ children }) => {
                         </Link>
                       </li>
                       <li>
-                        <Link
-                          className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3'
-                          to='#'
+                        <button
+                          type="button"
+                          onClick={() => fetch("/api/auth/signout", { method: "POST" })}
+                          className='dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3 border-0 bg-transparent w-100'
                         >
                           <Icon icon='lucide:power' className='icon text-xl' />{" "}
                           Log Out
-                        </Link>
+                        </button>
                       </li>
                     </ul>
                   </div>
