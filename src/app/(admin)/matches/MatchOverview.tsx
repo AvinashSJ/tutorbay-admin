@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { Icon } from "@iconify/react";
 
-interface MatchRow {
+export interface MatchRow {
   matchId: string;
   requirementId: string;
   requirementTitle: string;

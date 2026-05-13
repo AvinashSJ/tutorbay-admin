@@ -1,7 +1,7 @@
 import React from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import MatchOverview from "./MatchOverview";
-import type { Stats } from "./MatchOverview";
+import type { Stats, MatchRow } from "./MatchOverview";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +36,7 @@ export default async function MatchesPage() {
 
       <MatchOverview
         stats={stats as Stats | null}
-        matches={matches as Record<string, unknown>[] ?? []}
+        matches={matches as MatchRow[] ?? []}
       />
     </>
   );
