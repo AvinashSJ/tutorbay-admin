@@ -26,7 +26,7 @@ interface MatchRow {
   createdAt: string;
 }
 
-interface Stats {
+export interface Stats {
   totalRequirements: number;
   publishedRequirements: number;
   closedRequirements: number;
