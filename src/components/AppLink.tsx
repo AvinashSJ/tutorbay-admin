@@ -46,7 +46,7 @@ function isActivePath(pathname: string, href: string, end: boolean): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-interface NavLinkProps extends LinkProps {
+interface NavLinkProps extends Omit<LinkProps, "className" | "style"> {
   end?: boolean;
   className?: string | ((props: { isActive: boolean }) => string);
   style?: React.CSSProperties | ((props: { isActive: boolean }) => React.CSSProperties);
