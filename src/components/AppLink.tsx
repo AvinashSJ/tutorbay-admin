@@ -13,7 +13,9 @@ function normalizeTo(to: string | undefined | null): string {
   return "#";
 }
 
-interface LinkProps extends Omit<React.ComponentPropsWithoutRef<typeof NextLink>, "href"> {
+type NextLinkProps = Omit<React.ComponentPropsWithoutRef<typeof NextLink>, "href">;
+
+interface LinkProps extends NextLinkProps {
   to?: string;
   href?: string;
 }
@@ -46,6 +48,8 @@ function isActivePath(pathname: string, href: string, end: boolean): boolean {
 
 interface NavLinkProps extends LinkProps {
   end?: boolean;
+  className?: string | ((props: { isActive: boolean }) => string);
+  style?: React.CSSProperties | ((props: { isActive: boolean }) => React.CSSProperties);
 }
 
 export const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
