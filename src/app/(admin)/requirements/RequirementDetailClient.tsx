@@ -2,6 +2,7 @@
 
 import React from "react";
 import MatchList from "./MatchList";
+import type { MatchRow } from "@/lib/types/supabase";
 
 interface RequirementInfo {
   id: string;
@@ -21,23 +22,6 @@ interface RequirementInfo {
   notes: string | null;
   ownerName: string | null;
   ownerEmail: string | null;
-}
-
-interface MatchRow {
-  matchId: string;
-  tutorId: string;
-  tutorName: string;
-  tutorEmail: string;
-  tutorPhone: string;
-  subjects: string[];
-  areas: string[];
-  matchScore: number | null;
-  status: string;
-  tutorNotes: string | null;
-  parentNotes: string | null;
-  sessionCount: number;
-  lastSessionDate: string | null;
-  createdAt: string;
 }
 
 interface Props {
