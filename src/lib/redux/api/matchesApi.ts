@@ -31,5 +31,5 @@ export const matchesApi = baseApi.injectEndpoints({
   }),
 });
 
-export { type PipelineStats, type MatchRow, type PaginatedMatches };
+export { type PipelineStats, type MatchRow };
 export const { useGetMatchesQuery } = matchesApi;
