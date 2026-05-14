@@ -4,24 +4,13 @@ import { Tooltip } from 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const TooltipTextPopup = () => {
     useEffect(() => {
-        // Select all elements with the class 'tooltip-buttonTwo'
-        const tooltipButtons = document.querySelectorAll('.tooltip-buttonTwo');
-
-        // Initialize a tooltip for each button
-        const tooltipInstances = Array.from(tooltipButtons).map((tooltipButton) => {
-            const tooltipContent = tooltipButton.nextElementSibling.innerHTML;
-
-            return new Tooltip(tooltipButton, {
-                title: tooltipContent,
-                trigger: 'hover',
-                html: true,
-                customClass: tooltipButton.getAttribute('data-bs-custom-class') || '',
-            });
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => {
+            return new Tooltip(tooltipTriggerEl);
         });
 
-        // Cleanup tooltips when the component unmounts
         return () => {
-            tooltipInstances.forEach((tooltip) => tooltip.dispose());
+            tooltipList.forEach(tooltip => tooltip.dispose());
         };
     }, []);
     return (

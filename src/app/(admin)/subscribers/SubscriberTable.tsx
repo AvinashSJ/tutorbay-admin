@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-
-export interface SubscriberRow {
-  id: string;
-  email: string;
-  createdAt: string | null;
-}
+import type { SubscriberRow } from "@/lib/types/supabase";
 
 interface SubscriberTableProps {
   subscribers: SubscriberRow[];

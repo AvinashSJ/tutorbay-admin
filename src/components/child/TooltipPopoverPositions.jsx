@@ -1,26 +1,16 @@
 ﻿'use client'
 import React, { useEffect } from 'react'
 import { Tooltip } from 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 const TooltipPopoverPositions = () => {
     useEffect(() => {
-        // Select all elements with the class 'tooltip-buttonOne'
-        const tooltipButtons = document.querySelectorAll('.tooltip-buttonOne');
-
-        // Initialize a tooltip for each button
-        const tooltipInstances = Array.from(tooltipButtons).map((tooltipButton) => {
-            const tooltipContent = tooltipButton.nextElementSibling.innerHTML;
-
-            return new Tooltip(tooltipButton, {
-                title: tooltipContent,
-                trigger: 'hover',
-                html: true,
-                customClass: tooltipButton.getAttribute('data-bs-custom-class') || '',
-            });
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => {
+            return new Tooltip(tooltipTriggerEl);
         });
 
-        // Cleanup tooltips when the component unmounts
         return () => {
-            tooltipInstances.forEach((tooltip) => tooltip.dispose());
+            tooltipList.forEach(tooltip => tooltip.dispose());
         };
     }, []);
     return (

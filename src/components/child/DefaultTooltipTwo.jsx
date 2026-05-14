@@ -1,19 +1,14 @@
 ﻿'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { Tooltip } from 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
 const DefaultTooltipTwo = () => {
     useEffect(() => {
-        // Select all elements with data-bs-toggle="DefaultTooltipTwo"
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="DefaultTooltipTwo"]');
-
-        // Initialize tooltips
-        const tooltipList = Array.from(tooltipTriggerList).map(
-            (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
-        );
-        // Cleanup on unmount
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => {
+            return new Tooltip(tooltipTriggerEl);
+        });
         return () => {
-            tooltipList.forEach((tooltip) => tooltip.dispose());
+            tooltipList.forEach(tooltip => tooltip.dispose());
         };
     }, []);
     return (

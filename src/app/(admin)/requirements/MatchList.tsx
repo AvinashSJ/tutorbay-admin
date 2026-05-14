@@ -3,23 +3,7 @@
 import React, { useState } from "react";
 import { scheduleSession, updateSessionStatus, submitFeedback } from "./actions";
 import SessionTimeline from "./SessionTimeline";
-
-interface MatchRow {
-  matchId: string;
-  tutorId: string;
-  tutorName: string;
-  tutorEmail: string;
-  tutorPhone: string;
-  subjects: string[];
-  areas: string[];
-  matchScore: number | null;
-  status: string;
-  tutorNotes: string | null;
-  parentNotes: string | null;
-  sessionCount: number;
-  lastSessionDate: string | null;
-  createdAt: string;
-}
+import type { MatchRow } from "@/lib/types/supabase";
 
 interface MatchListProps {
   matches: MatchRow[];

@@ -2,19 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { getMatchTimeline } from "./actions";
-
-interface TimelineEvent {
-  sessionId: string;
-  sessionType: string;
-  scheduledAt: string;
-  status: string;
-  feedback: string | null;
-  rating: number | null;
-  outcome: string | null;
-  locationUrl: string | null;
-  meetingLink: string | null;
-  createdAt: string;
-}
+import type { TimelineEvent } from "@/lib/types/supabase";
 
 interface SessionTimelineProps {
   matchId: string;

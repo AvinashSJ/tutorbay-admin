@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-css-tags */
 import type { Metadata } from "next";
+import StoreProvider from "./StoreProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -26,7 +27,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="/assets/css/style.css" />
       </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
-        {children}
+        <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
   );

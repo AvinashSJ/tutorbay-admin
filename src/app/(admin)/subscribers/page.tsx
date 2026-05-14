@@ -1,7 +1,7 @@
 import React from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import SubscriberTable from "./SubscriberTable";
-import type { SubscriberRow } from "./SubscriberTable";
+import type { SubscriberRow } from "@/lib/types/supabase";
 
 export const dynamic = "force-dynamic";
 

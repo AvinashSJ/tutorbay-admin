@@ -1,7 +1,8 @@
 ﻿'use client'
 import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Link, NavLink, useLocation } from "@/components/router-compat";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import { Link, NavLink, useLocation } from "@/components/AppLink";
 import ThemeToggleButton from "@/helper/ThemeToggleButton";
 
 const MasterLayout = ({ children }) => {
@@ -1911,7 +1912,9 @@ const MasterLayout = ({ children }) => {
         </div>
 
         {/* dashboard-main-body */}
-        <div className='dashboard-main-body'>{children}</div>
+        <div className='dashboard-main-body'>
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </div>
 
         {/* Footer section */}
         <footer className='d-footer'>

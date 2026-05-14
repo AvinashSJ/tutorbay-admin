@@ -1,7 +1,7 @@
 import React from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import MatchOverview from "./MatchOverview";
-import type { Stats, MatchRow } from "./MatchOverview";
+import type { PipelineStats as Stats, MatchRow } from "@/lib/types/supabase";
 
 export const dynamic = "force-dynamic";
 

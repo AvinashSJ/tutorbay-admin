@@ -1,21 +1,7 @@
 import React from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { Icon } from "@iconify/react";
-
-interface PipelineStats {
-  totalRequirements: number;
-  publishedRequirements: number;
-  closedRequirements: number;
-  totalMatches: number;
-  matched: number;
-  scheduled: number;
-  hired: number;
-  rejected: number;
-  totalSessions: number;
-  completedSessions: number;
-  pendingSessions: number;
-  averageRating: number | null;
-}
+import type { PipelineStats } from "@/lib/types/supabase";
 
 async function fetchPipelineStats(): Promise<PipelineStats | null> {
   try {

@@ -1,7 +1,7 @@
 ﻿'use client'
 import React from "react";
 import { Icon } from "@iconify/react";
-import { Link } from "@/components/router-compat";
+import { Link } from "@/components/AppLink";
 const Breadcrumb = ({ title }) => {
   return (
     <div className='d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24'>

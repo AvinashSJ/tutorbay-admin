@@ -1,7 +1,7 @@
 import React from "react";
 import { createAdminClient } from "@/lib/supabase/admin";
 import PaymentTable from "./PaymentTable";
-import type { PaymentRow } from "./PaymentTable";
+import type { PaymentRow } from "@/lib/types/supabase";
 
 export const dynamic = "force-dynamic";
 

@@ -2,44 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { Icon } from "@iconify/react";
-
-export interface MatchRow {
-  matchId: string;
-  requirementId: string;
-  requirementTitle: string;
-  requirementSubject: string;
-  requirementArea: string;
-  requirementStatus: string;
-  tutorId: string;
-  tutorName: string;
-  tutorEmail: string;
-  tutorPhone: string;
-  subjects: string[];
-  areas: string[];
-  matchScore: number | null;
-  status: string;
-  tutorNotes: string | null;
-  parentNotes: string | null;
-  sessionCount: number;
-  lastSessionDate: string | null;
-  scheduledAt: string | null;
-  createdAt: string;
-}
-
-export interface Stats {
-  totalRequirements: number;
-  publishedRequirements: number;
-  closedRequirements: number;
-  totalMatches: number;
-  matched: number;
-  scheduled: number;
-  hired: number;
-  rejected: number;
-  totalSessions: number;
-  completedSessions: number;
-  pendingSessions: number;
-  averageRating: number | null;
-}
+import type { MatchRow, PipelineStats as Stats } from "@/lib/types/supabase";
 
 interface MatchOverviewProps {
   stats: Stats | null;

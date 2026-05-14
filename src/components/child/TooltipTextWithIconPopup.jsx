@@ -5,13 +5,9 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 
 const TooltipTextWithIconPopup = () => {
     useEffect(() => {
-        // Select all elements with the class 'tooltip-buttonThree '
         const tooltipButtons = document.querySelectorAll('.tooltip-buttonThree');
-
-        // Initialize a tooltip for each button
         const tooltipInstances = Array.from(tooltipButtons).map((tooltipButton) => {
             const tooltipContent = tooltipButton.nextElementSibling.innerHTML;
-
             return new Tooltip(tooltipButton, {
                 title: tooltipContent,
                 trigger: 'hover',
@@ -19,8 +15,6 @@ const TooltipTextWithIconPopup = () => {
                 customClass: tooltipButton.getAttribute('data-bs-custom-class') || '',
             });
         });
-
-        // Cleanup tooltips when the component unmounts
         return () => {
             tooltipInstances.forEach((tooltip) => tooltip.dispose());
         };

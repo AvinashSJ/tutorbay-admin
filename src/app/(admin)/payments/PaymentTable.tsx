@@ -1,23 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-
-export interface PaymentRow {
-  id: string;
-  tutorId: string;
-  email: string | null;
-  amount: number;
-  currency: string;
-  status: string;
-  provider: string | null;
-  providerPaymentId: string | null;
-  stripePaymentIntentId: string | null;
-  metadata: Record<string, unknown> | null;
-  createdAt: string | null;
-  updatedAt: string | null;
-  userEmail: string | null;
-  userFullName: string | null;
-}
+import type { PaymentRow } from "@/lib/types/supabase";
 
 interface PaymentTableProps {
   payments: PaymentRow[];

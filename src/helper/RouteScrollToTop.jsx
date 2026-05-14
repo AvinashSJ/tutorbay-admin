@@ -1,7 +1,7 @@
 ﻿'use client'
 
 import { useEffect } from 'react';
-import { useLocation } from '@/components/router-compat';
+import { useLocation } from '@/components/AppLink';
 const RouteScrollToTop = () => {
   const pathname = useLocation()
 
