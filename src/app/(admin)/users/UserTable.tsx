@@ -9,12 +9,14 @@ const PAGE_SIZE = 20;
 interface UserRow {
   id: string;
   email: string;
+  fullName: string | null;
   role: string;
   createdAt: string;
   lastSignIn: string;
   isBanned: boolean;
   tutorApplicationStatus: string | null;
   tutorAdminNotes: string | null;
+  walletBalance: number | null;
 }
 
 interface UserTableProps {
@@ -42,9 +44,10 @@ export default function UserTable({ users }: UserTableProps) {
 
   const filtered = useMemo(
     () =>
-      users.filter((u) =>
-        u.email.toLowerCase().includes(search.toLowerCase()),
-      ),
+      users.filter((u) => {
+        const q = search.toLowerCase();
+        return u.email.toLowerCase().includes(q) || (u.fullName ?? "").toLowerCase().includes(q);
+      }),
     [users, search],
   );
 
@@ -97,6 +100,7 @@ export default function UserTable({ users }: UserTableProps) {
                 <th scope="col">Created At</th>
                 <th scope="col">Last Sign In</th>
                 <th scope="col" className="text-center">Status</th>
+                <th scope="col" className="text-center">Wallet</th>
                 <th scope="col" className="text-center">Actions</th>
                 <th scope="col">Tutor Application</th>
                 <th scope="col">Admin Notes</th>
@@ -105,7 +109,7 @@ export default function UserTable({ users }: UserTableProps) {
             <tbody>
               {paged.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="text-center py-40 text-secondary-light">
+                  <td colSpan={9} className="text-center py-40 text-secondary-light">
                     No users found.
                   </td>
                 </tr>
@@ -122,7 +126,12 @@ export default function UserTable({ users }: UserTableProps) {
                           >
                             {getInitials(user.email)}
                           </div>
-                          <span className="text-md text-secondary-light fw-medium">{user.email}</span>
+                          <div>
+                            {user.fullName && (
+                              <div className="text-sm fw-semibold text-primary-light">{user.fullName}</div>
+                            )}
+                            <span className="text-md text-secondary-light">{user.email}</span>
+                          </div>
                         </div>
                       </a>
                     </td>
@@ -152,6 +161,17 @@ export default function UserTable({ users }: UserTableProps) {
                         <span className="bg-success-focus text-success-600 border border-success-main px-16 py-4 radius-4 fw-medium text-sm">
                           Active
                         </span>
+                      )}
+                    </td>
+
+                    {/* Wallet */}
+                    <td className="text-center">
+                      {user.walletBalance !== null ? (
+                        <span className="bg-primary-focus text-primary-600 border border-primary-main px-16 py-4 radius-4 fw-medium text-sm">
+                          {user.walletBalance} credits
+                        </span>
+                      ) : (
+                        <span className="text-secondary-light text-sm">—</span>
                       )}
                     </td>
 

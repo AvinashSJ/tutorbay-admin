@@ -22,6 +22,20 @@ interface ApplicationHistoryEntry {
   additionalInfoRequired?: string;
 }
 
+interface WalletInfo {
+  balance: number;
+}
+
+interface TransactionRow {
+  id: string;
+  type: string;
+  source: string;
+  amount: number;
+  balanceAfter: number;
+  description: string | null;
+  createdAt: string;
+}
+
 interface TutorProfileData {
   userId: string;
   firstName: string | null;
@@ -50,6 +64,8 @@ interface TutorProfileData {
 interface Props {
   user: UserInfo;
   tutorProfile: TutorProfileData | null;
+  wallet: WalletInfo | null;
+  transactions: TransactionRow[];
 }
 
 function getInitials(str: string): string {
@@ -110,7 +126,7 @@ function InfoRow({ label, value }: { label: string; value: string | null | undef
   );
 }
 
-export default function UserDetailClient({ user, tutorProfile }: Props) {
+export default function UserDetailClient({ user, tutorProfile, wallet, transactions }: Props) {
   const [activeTab, setActiveTab] = useState<string>("info");
   const [showNotes, setShowNotes] = useState(false);
   const [reviewAction, setReviewAction] = useState("PENDING_REVIEW");
@@ -203,6 +219,18 @@ export default function UserDetailClient({ user, tutorProfile }: Props) {
                     role="tab"
                   >
                     Application Review
+                  </button>
+                </li>
+              )}
+              {wallet && (
+                <li className="nav-item" role="presentation">
+                  <button
+                    className={`nav-link d-flex align-items-center px-24 ${activeTab === "wallet" ? "active" : ""}`}
+                    onClick={() => setActiveTab("wallet")}
+                    type="button"
+                    role="tab"
+                  >
+                    Wallet
                   </button>
                 </li>
               )}
@@ -381,7 +409,70 @@ export default function UserDetailClient({ user, tutorProfile }: Props) {
               </div>
             )}
 
-            {!isTutor && activeTab !== "info" && (
+            {/* ── Tab: Wallet ── */}
+            {activeTab === "wallet" && wallet && (
+              <div>
+                {/* Balance Card */}
+                <div className="bg-primary-focus border border-primary-main rounded p-24 mb-24 text-center">
+                  <h6 className="text-sm text-primary-600 fw-medium mb-8">Current Balance</h6>
+                  <div className="text-primary-600 fw-bold" style={{ fontSize: 36 }}>
+                    {wallet.balance}
+                    <span className="text-md fw-medium ms-2">credits</span>
+                  </div>
+                </div>
+
+                {/* Transaction History */}
+                <h6 className="text-md text-primary-light mb-16">Transaction History</h6>
+                {transactions.length === 0 ? (
+                  <p className="text-secondary-light text-sm">No transactions yet.</p>
+                ) : (
+                  <div className="table-responsive">
+                    <table className="table bordered-table sm-table mb-0">
+                      <thead>
+                        <tr>
+                          <th scope="col">Date</th>
+                          <th scope="col">Type</th>
+                          <th scope="col">Source</th>
+                          <th scope="col">Amount</th>
+                          <th scope="col">Balance After</th>
+                          <th scope="col">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {transactions.map((tx) => (
+                          <tr key={tx.id}>
+                            <td>
+                              <span className="text-sm text-secondary-light">{formatDateTime(tx.createdAt)}</span>
+                            </td>
+                            <td>
+                              <span className={`badge ${tx.type === "CREDIT" ? "bg-success" : "bg-danger"} text-white px-12 py-6 radius-4 text-sm fw-medium`}>
+                                {tx.type}
+                              </span>
+                            </td>
+                            <td>
+                              <span className="text-sm text-secondary-light">{tx.source.replace(/_/g, " ")}</span>
+                            </td>
+                            <td>
+                              <span className={`fw-semibold text-sm ${tx.type === "CREDIT" ? "text-success-600" : "text-danger-600"}`}>
+                                {tx.type === "CREDIT" ? "+" : "-"}{tx.amount}
+                              </span>
+                            </td>
+                            <td>
+                              <span className="text-sm text-secondary-light">{tx.balanceAfter}</span>
+                            </td>
+                            <td>
+                              <span className="text-sm text-secondary-light">{tx.description ?? "\u2014"}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!isTutor && activeTab !== "info" && activeTab !== "wallet" && (
               <p className="text-secondary-light">This user is not a tutor.</p>
             )}
           </div>

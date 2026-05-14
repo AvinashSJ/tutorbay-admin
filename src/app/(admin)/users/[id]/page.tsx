@@ -37,6 +37,21 @@ export default async function UserDetailPage({ params, searchParams }: PageProps
     .eq("id", id)
     .single();
 
+  // Fetch wallet + transactions
+  const { data: wallet } = await supabase
+    .from("TutorWallet")
+    .select("id, balance")
+    .eq("tutorId", id)
+    .single();
+
+  const { data: transactions } = wallet
+    ? await supabase
+        .from("WalletTransaction")
+        .select("*")
+        .eq("walletId", wallet.id)
+        .order("createdAt", { ascending: false })
+    : { data: [] };
+
   const userData = {
     id: user.id,
     email: user.email ?? "(no email)",
@@ -85,7 +100,12 @@ export default async function UserDetailPage({ params, searchParams }: PageProps
         </div>
       )}
 
-      <UserDetailClient user={userData} tutorProfile={tutorProfile} />
+      <UserDetailClient
+        user={userData}
+        tutorProfile={tutorProfile}
+        wallet={wallet ? { balance: wallet.balance } : null}
+        transactions={transactions ?? []}
+      />
     </>
   );
 }

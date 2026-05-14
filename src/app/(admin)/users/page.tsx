@@ -31,17 +31,37 @@ export default async function UsersPage({ searchParams }: PageProps) {
     (tutorProfiles ?? []).map((p) => [p.userId, p])
   );
 
+  // Fetch fullName from User table
+  const { data: userRecords } = await supabase
+    .from("User")
+    .select("id, fullName");
+
+  const userRecordMap = new Map(
+    (userRecords ?? []).map((r) => [r.id, r.fullName])
+  );
+
+  // Fetch wallet balances
+  const { data: wallets } = await supabase
+    .from("TutorWallet")
+    .select("tutorId, balance");
+
+  const walletMap = new Map(
+    (wallets ?? []).map((w) => [w.tutorId, w.balance])
+  );
+
   const users = (data?.users ?? []).map((u) => {
     const tutorProfile = tutorProfileMap.get(u.id);
     return {
       id: u.id,
       email: u.email ?? "(no email)",
+      fullName: userRecordMap.get(u.id) ?? (u.user_metadata?.fullName as string) ?? null,
       role: (u.user_metadata?.role as string) || "student",
       createdAt: formatDate(u.created_at),
       lastSignIn: formatDate(u.last_sign_in_at),
       isBanned: !!u.banned_until && new Date(u.banned_until) > new Date(),
       tutorApplicationStatus: tutorProfile?.applicationStatus ?? null,
       tutorAdminNotes: tutorProfile?.adminNotes ?? null,
+      walletBalance: walletMap.get(u.id) ?? null,
     };
   });
 
