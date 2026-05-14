@@ -149,6 +149,7 @@ export async function reviewTutorApplication(formData: FormData) {
   const action = String(formData.get("action") ?? "").trim();
   const adminNotes = String(formData.get("adminNotes") ?? "").trim() || null;
   const additionalInfo = String(formData.get("additionalInfo") ?? "").trim() || null;
+  const redirectTo = String(formData.get("redirectTo") ?? "").trim() || USERS_PATH;
 
   if (!userId || !action) {
     redirect(`${USERS_PATH}?error=${encodeURIComponent("Invalid application or action.")}`);
@@ -210,6 +211,7 @@ export async function reviewTutorApplication(formData: FormData) {
   }
 
   revalidatePath(USERS_PATH);
+  revalidatePath(redirectTo);
   const label = newStatus.replace(/_/g, " ").toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-  redirect(`${USERS_PATH}?message=${encodeURIComponent(`Application status set to ${label}.`)}`);
+  redirect(`${redirectTo}?message=${encodeURIComponent(`Application status set to ${label}.`)}`);
 }

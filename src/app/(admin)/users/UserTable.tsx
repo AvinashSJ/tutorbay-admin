@@ -113,16 +113,18 @@ export default function UserTable({ users }: UserTableProps) {
                 paged.map((user) => (
                   <tr key={user.id}>
                     {/* User */}
-                    <td>
-                      <div className="d-flex align-items-center gap-10">
-                        <div
-                          className="w-40-px h-40-px rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center fw-semibold text-white"
-                          style={{ background: stringToColor(user.email), fontSize: 14 }}
-                        >
-                          {getInitials(user.email)}
+                    <td className="bg-hover-primary-50" style={{ cursor: "pointer" }}>
+                      <a href={`/users/${user.id}`} className="text-decoration-none d-block">
+                        <div className="d-flex align-items-center gap-10">
+                          <div
+                            className="w-40-px h-40-px rounded-circle flex-shrink-0 d-flex align-items-center justify-content-center fw-semibold text-white"
+                            style={{ background: stringToColor(user.email), fontSize: 14 }}
+                          >
+                            {getInitials(user.email)}
+                          </div>
+                          <span className="text-md text-secondary-light fw-medium">{user.email}</span>
                         </div>
-                        <span className="text-md text-secondary-light">{user.email}</span>
-                      </div>
+                      </a>
                     </td>
 
                     {/* Role */}
