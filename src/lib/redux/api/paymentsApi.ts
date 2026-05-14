@@ -29,5 +29,5 @@ export const paymentsApi = baseApi.injectEndpoints({
   }),
 });
 
-export { type PaymentRow, type PaginatedPayments };
+export { type PaymentRow };
 export const { useGetPaymentsQuery } = paymentsApi;

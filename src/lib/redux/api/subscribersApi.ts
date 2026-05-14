@@ -29,5 +29,5 @@ export const subscribersApi = baseApi.injectEndpoints({
   }),
 });
 
-export { type SubscriberRow, type PaginatedSubscribers };
+export { type SubscriberRow };
 export const { useGetSubscribersQuery } = subscribersApi;
