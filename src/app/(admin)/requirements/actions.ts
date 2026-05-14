@@ -82,6 +82,15 @@ export async function updateSessionStatus(sessionId: string, status: string) {
   return { success: true };
 }
 
+export async function getMatchTimeline(matchId: string) {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc("admin_get_match_timeline", {
+    p_match_id: matchId,
+  });
+  if (error) return { data: null, error: error.message };
+  return { data, error: null };
+}
+
 export async function submitFeedback(formData: {
   sessionId: string;
   feedback: string;

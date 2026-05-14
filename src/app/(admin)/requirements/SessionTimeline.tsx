@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { getMatchTimeline } from "./actions";
 
 interface TimelineEvent {
   sessionId: string;
@@ -45,11 +45,8 @@ export default function SessionTimeline({ matchId }: SessionTimelineProps) {
   useEffect(() => {
     async function fetchTimeline() {
       try {
-        const supabase = createAdminClient();
-        const { data, error } = await supabase.rpc("admin_get_match_timeline", {
-          p_match_id: matchId,
-        });
-        if (!error) setSessions(data as unknown as TimelineEvent[]);
+        const { data, error } = await getMatchTimeline(matchId);
+        if (!error && data) setSessions(data as unknown as TimelineEvent[]);
       } catch {
         // silently fail
       } finally {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { inviteUser, updateUserRole, deleteUser, toggleBanUser } from "./actions";
+import { inviteUser, updateUserRole, deleteUser, toggleBanUser, reviewTutorApplication } from "./actions";
 
 // ---------------------------------------------------------------------------
 // Invite User Modal
@@ -337,7 +337,7 @@ export function TutorReviewModal() {
               aria-label="Close"
             />
           </div>
-          <form method="POST" action="/api/admin/tutor-review">
+          <form action={reviewTutorApplication}>
             <div className="modal-body">
               <p className="text-secondary-light text-sm mb-3">{email}</p>
               <input type="hidden" name="userId" ref={userIdRef} />

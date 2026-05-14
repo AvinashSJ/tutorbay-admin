@@ -4,6 +4,15 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
+function sanitizeError(msg: string): string {
+  if (msg.toLowerCase().includes("invalid login credentials")) return "Invalid email or password.";
+  if (msg.toLowerCase().includes("email not confirmed")) return "Please confirm your email address first.";
+  if (msg.toLowerCase().includes("user already registered")) return "An account with that email already exists.";
+  if (msg.toLowerCase().includes("rate limit")) return "Too many attempts. Please try again later.";
+  if (msg.toLowerCase().includes("not found")) return "User not found.";
+  return "An error occurred. Please try again.";
+}
+
 export async function signIn(formData: FormData) {
   const supabase = await createClient();
 
@@ -17,7 +26,7 @@ export async function signIn(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    redirect(`/auth/login?error=${encodeURIComponent(error.message)}`);
+    redirect(`/auth/login?error=${encodeURIComponent(sanitizeError(error.message))}`);
   }
 
   revalidatePath("/", "layout");
@@ -37,7 +46,7 @@ export async function signUp(formData: FormData) {
   const { error } = await supabase.auth.signUp({ email, password });
 
   if (error) {
-    redirect(`/auth/login?error=${encodeURIComponent(error.message)}`);
+    redirect(`/auth/login?error=${encodeURIComponent(sanitizeError(error.message))}`);
   }
 
   redirect("/auth/login?message=Account created. You can sign in now.");
